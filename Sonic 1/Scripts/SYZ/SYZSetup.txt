@@ -410,6 +410,13 @@ private table SYZSetup_replay_credits_STK
 	0x02, 13
 end table
 
+private table SYZSetup_palTable
+	0xE00000, 0xE0E0E0
+	0xE06060, 0x8080E0
+	0xE0E0E0, 0x0000C0
+	0xE06060, 0x8080E0
+end table
+
 
 // ========================
 // Function Definitions
@@ -485,11 +492,17 @@ event ObjectUpdate
 	object.palRotateTimer++
 	if object.palRotateTimer == 6
 		object.palRotateTimer = 0
-		object.palRotateIndex++
-		object.palRotateIndex &= 3
+		object.palRotateIndex += 2
+		object.palRotateIndex %= 8
+
+		rotatePalette(0, 183, 186, false)
+
 		temp0 = object.palRotateIndex
+		GetTableValue(temp1, temp0, SYZSetup_palTable)
+		SetPaletteEntry(0, 187, temp1)
 		temp0++
-		CopyPalette(temp0, 160, 0, 160, 32)
+		GetTableValue(temp1, temp0, SYZSetup_palTable)
+		SetPaletteEntry(0, 189, temp1)
 	end if
 
 	object.rLightTimer++
@@ -509,18 +522,6 @@ event ObjectStartup
 	// Also set the speed up/slow down functions
 	SpeedUpMusic = SYZSetup_SpeedUpMusic
 	SlowDownMusic = SYZSetup_SlowDownMusic
-
-	// Load colors used for the palette cycle
-	// While the majority of this game uses tables for color data, SYZ instead goes back to the v3 approach of loading colors from an external file into alternate palette banks
-	temp0 = 1  // Palette bank
-	temp1 = 0  // Start Index
-	temp2 = 32 // End Index
-	while temp0 < 5
-		LoadPalette("SYZ_PalCycle.act", temp0, 160, temp1, temp2)
-		temp0++
-		temp1 += 32
-		temp2 += 32
-	loop
 
 	// Set the animal types
 	animalType1 = TypeName[Cucky]

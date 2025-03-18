@@ -58,20 +58,14 @@ public value SLZSetup_rotateTimer = 0
 // Tables
 // ========================
 
-private table SLZSetup_palTable1
-	0x00E0E0, 0x00A0A0, 0x006060, 0x002020, 0x006060, 0x00A0A0
+private table SLZSetup_palTable
+	0x00E0E0, 0x600000, 0x606000
+	0x00A0A0, 0xA00000, 0x202000
+	0x006060, 0xE00000, 0x606000
+	0x002020, 0xA00000, 0xA0A000
+	0x006060, 0x600000, 0xE0E000
+	0x00A0A0, 0x200000, 0xA0A000
 end table
-
-
-private table SLZSetup_palTable2
-	0x600000, 0xA00000, 0xE00000, 0xA00000, 0x600000, 0x200000
-end table
-
-
-private table SLZSetup_palTable3
-	0x606000, 0x202000, 0x606000, 0xA0A000, 0xE0E000, 0xA0A000
-end table
-
 
 private table SLZSetup_replay_credits_STK
 	0xBB00000, 0x4C0000
@@ -170,14 +164,17 @@ event ObjectUpdate
 	object.paletteTimer++
 	if object.paletteTimer == 8
 		object.paletteTimer = 0
-		object.paletteIndex++
-		object.paletteIndex %= 6
+		object.paletteIndex += 3
+		object.paletteIndex %= 18
 
-		GetTableValue(temp0, object.paletteIndex, SLZSetup_palTable1)
+		temp1 = object.paletteIndex
+		GetTableValue(temp0, temp1, SLZSetup_palTable)
 		SetPaletteEntry(0, 171, temp0)
-		GetTableValue(temp0, object.paletteIndex, SLZSetup_palTable2)
+		temp1++
+		GetTableValue(temp0, temp1, SLZSetup_palTable)
 		SetPaletteEntry(0, 173, temp0)
-		GetTableValue(temp0, object.paletteIndex, SLZSetup_palTable3)
+		temp1++
+		GetTableValue(temp0, temp1, SLZSetup_palTable)
 		SetPaletteEntry(0, 174, temp0)
 	end if
 end event

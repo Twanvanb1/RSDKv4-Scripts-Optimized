@@ -133,18 +133,6 @@ private table SBZSetup_electricOrbDelayTable
 	20, 3, 1, 2, 3, 3
 end table
 
-private table SBZSetup_palTableA_1
-	0xE0A0E0, 0xE040E0, 0x800080
-end table
-
-private table SBZSetup_palTableA_2
-	0xE040E0, 0x800080, 0xE0A0E0
-end table
-
-private table SBZSetup_palTableA_3
-	0x800080, 0xE0A0E0, 0xE040E0
-end table
-
 private table SBZSetup_replay_credits_STK_2
 	0x15700000, 0x16C0000
 	0x00, 6
@@ -389,12 +377,7 @@ event ObjectUpdate
 		object.palTimerA = 0
 		object.palIndexA++
 		object.palIndexA %= 3
-		GetTableValue(temp0, object.palIndexA, SBZSetup_palTableA_1)
-		SetPaletteEntry(0, 188, temp0)
-		GetTableValue(temp0, object.palIndexA, SBZSetup_palTableA_2)
-		SetPaletteEntry(0, 189, temp0)
-		GetTableValue(temp0, object.palIndexA, SBZSetup_palTableA_3)
-		SetPaletteEntry(0, 190, temp0)
+		RotatePalette(0, 188, 190, false)
 	end if
 
 	object.palTimerB++
